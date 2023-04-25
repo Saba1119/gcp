@@ -39,7 +39,7 @@ func main() {
                 ConditionThreshold: &monitoring.AlertPolicy_Condition_MetricThreshold{
                     Comparison: monitoring.Comparison_GT,
                     ThresholdValue: &monitoring.TypedValue{
-                        DoubleValue: 1.0,
+                        DoubleValue: &[]float64{1.0}[0],
                     },
                     TimeWindow: &monitoring.Duration{
                         Seconds: 60,
