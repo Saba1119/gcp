@@ -11,7 +11,7 @@ import (
 )
 
 const (
-    projectID = "develop-375210"
+    projectID = "my-project-id"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
     defer logClient.Close()
 
     // Create a Stackdriver Monitoring client
-    monitoringService, err := monitoring.NewService(ctx,)
+    monitoringService, err := monitoring.NewService(ctx, option.WithCredentialsFile("path/to/creds.json"))
     if err != nil {
         log.Fatalf("Failed to create client: %v", err)
     }
@@ -35,12 +35,11 @@ func main() {
         DisplayName: "High CPU usage",
         Conditions: []*monitoring.AlertPolicy_Condition{
             {
+                DisplayName: "High CPU usage",
                 ConditionThreshold: &monitoring.AlertPolicy_Condition_MetricThreshold{
                     Comparison: monitoring.Comparison_GT,
                     ThresholdValue: &monitoring.TypedValue{
-                        Value: &monitoring.TypedValue_DoubleValue{
-                            DoubleValue: 1.0,
-                        },
+                        DoubleValue: 1.0,
                     },
                     TimeWindow: &monitoring.Duration{
                         Seconds: 60,
@@ -62,8 +61,24 @@ func main() {
                 },
             },
         },
-        Combiner: monitoring.ConditionCombiner_OR,
-        Enabled:  true,
+        CombinationOfPolicies: &monitoring.AlertPolicy_CombinationOfPolicies{
+            Conditions: []*monitoring.AlertPolicy_CombinationCondition{
+                {
+                    Condition: &monitoring.AlertPolicy_Condition{
+                        Name: "projects/" + projectID + "/alertPolicies/" + "policy-id-1" + "/conditions/0",
+                    },
+                    Trigger: &monitoring.AlertPolicy_CombinationCondition_Trigger{},
+                },
+                {
+                    Condition: &monitoring.AlertPolicy_Condition{
+                        Name: "projects/" + projectID + "/alertPolicies/" + "policy-id-2" + "/conditions/0",
+                    },
+                    Trigger: &monitoring.AlertPolicy_CombinationCondition_Trigger{},
+                },
+            },
+            Combination: monitoring.AlertPolicy_CombinationOfPolicies_OR,
+        },
+        Enabled: true,
     }
 
     // Create the alert policy
@@ -82,7 +97,6 @@ func main() {
             "type": "error",
         },
     }
-
     // Write the log entry
     if _, err := logClient.Logger("my-log").Log(logEntry); err != nil {
         log.Fatalf("Failed to write log entry: %v", err)
