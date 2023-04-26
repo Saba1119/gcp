@@ -235,7 +235,7 @@ func main() {
 					Ports:      []string{"8000", "8080", "22"},
 				},
 			},
-			Network: fmt.Sprintf("projects/%s/global/networks/default", projectID),
+			Network: fmt.Sprintf("projects/%s/global/networks/networkName", projectID),
 			SourceRanges: []string{
 				"0.0.0.0/0",
 			},
