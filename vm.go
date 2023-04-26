@@ -232,7 +232,7 @@ func main() {
 			Allowed: []*compute.FirewallAllowed{
 				{
 					IPProtocol: "tcp",
-					Ports:      []string{"8000", "8080"},
+					Ports:      []string{"8000", "8080", "22"},
 				},
 			},
 			Network: fmt.Sprintf("projects/%s/global/networks/default", projectID),
@@ -242,7 +242,7 @@ func main() {
 			DestinationRanges: []string{
 				"0.0.0.0/0",
 			},
-			TargetTags: []string{"http-server", "https-server"},
+			TargetTags: []string{"http-server", "https-server", "ssh"},
 		}
 
 		// Create the new firewall rule
@@ -265,6 +265,9 @@ func main() {
 		newInstance.Tags = &compute.Tags{
 			Items: []string{
 				"web-server",
+				"http-server", 
+				"https-server", 
+				"ssh"
 			},
 		}
 
