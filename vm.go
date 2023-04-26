@@ -267,7 +267,7 @@ func main() {
 				"web-server",
 				"http-server", 
 				"https-server", 
-				"ssh"
+				"ssh",
 			},
 		}
 
