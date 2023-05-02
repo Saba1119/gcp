@@ -24,17 +24,7 @@ func main() {
 		fmt.Printf("Failed to create Compute Engine service client: %v", err)
 		return
 	}
-
-	// // Define the new VPC to create
-	// vpcName := "my-vpc-vm"
-	// vpcCIDR := "10.0.0.0/16"
-
-	// // Define the new subnet to create
-	// subnetName := "my-subnet-vm"
-	// subnetCIDR := "10.0.1.0/24"
-
-	// Define the new VPC network to create
-	networkName := "my-network-vm"
+	networkName := "my-network-vm3"
 	network := &compute.Network{
 		Name:                  networkName,
 		AutoCreateSubnetworks: true,
@@ -55,40 +45,6 @@ func main() {
 	}
 
 	fmt.Printf("VPC network %q is created.\n", networkName)
-
-	// // Define the new subnets to create
-	// subnetName1 := "my-subnet-1-vm"
-	// subnet1 := &compute.Subnetwork{
-	// 	Name:        subnetName1,
-	// 	IpCidrRange: "10.0.1.0/24",
-	// 	Network:     fmt.Sprintf("projects/%s/global/networks/%s", projectID, networkName),
-	// 	Region:      zone[:len(zone)-2],
-	// }
-
-	// subnetName2 := "my-subnet-2-vm"
-	// subnet2 := &compute.Subnetwork{
-	// 	Name:        subnetName2,
-	// 	IpCidrRange: "10.0.2.0/24",
-	// 	Network:     fmt.Sprintf("projects/%s/global/networks/%s", projectID, networkName),
-	// 	Region:      zone[:len(zone)-2],
-	// }
-
-	// // Create the new subnets
-	// _, err = computeService.Subnetworks.Insert(projectID, zone, subnet1).Do()
-	// if err != nil {
-	// 	fmt.Printf("Failed to create subnet %q: %v", subnetName1, err)
-	// 	return
-	// }
-
-	// fmt.Printf("Subnets %q  is created.\n", subnetName1)
-
-	// _, err = computeService.Subnetworks.Insert(projectID, zone, subnet2).Do()
-	// if err != nil {
-	// 	fmt.Printf("Failed to create subnet %q: %v", subnetName2, err)
-	// 	return
-	// }
-
-	//fmt.Printf("Subnets %q  is created.\n", subnetName1)
 
 	subnetName1 := "my-subnet-1-vm"
 	region := "us-central1"
@@ -131,41 +87,6 @@ func main() {
 		},
 	}
 
-	// // Define the new VPC to create
-	// vpcName := "my-vpc-vm"
-	// vpcCIDR := "10.0.0.0/16"
-
-	// // Create the new VPC
-	// vpc, err := computeService.Networks.Insert(projectID, &compute.Network{
-	// 	Name:      vpcName,
-	// 	IPv4 : vpcCIDR,
-	// }).Do()
-	// if err != nil {
-	// 	fmt.Printf("Failed to create VPC: %v", err)
-	// 	return
-	// }
-
-	// fmt.Printf("VPC %q is created with selfLink %q.\n", vpc.Name, vpc.SelfLink)
-
-	// // // Define the new subnet to create
-	// // subnetName := "my-subnet-vm"
-	// // subnetCIDR := "10.0.1.0/24"
-
-	// // Create the new subnet
-	// subnet, err := computeService.Subnetworks.Insert(projectID, zone, &compute.Subnetwork{
-	// 	Name:        subnetName,
-	// 	Network:     vpc.SelfLink,
-	// 	IpCidrRange: subnetCIDR,
-	// }).Do()
-	// if err != nil {
-	// 	fmt.Printf("Failed to create subnet: %v", err)
-	// 	return
-	// }
-
-	// fmt.Printf("Subnet %q is created with selfLink %q.\n", subnet.Name, subnet.SelfLink)
-
-	// Define the new subnets to create
-	// subnetName1 := "my-subnet-1-vm"
 	subnet1 := &compute.Subnetwork{
 		Name:        subnetName1,
 		IpCidrRange: "10.0.1.0/24",
@@ -235,7 +156,7 @@ func main() {
 					Ports:      []string{"8000", "8080", "22"},
 				},
 			},
-			Network: fmt.Sprintf("projects/%s/global/networks/networkName", projectID),
+			Network: fmt.Sprintf("projects/%s/global/networks/%s", projectID, networkName),
 			SourceRanges: []string{
 				"0.0.0.0/0",
 			},
@@ -265,8 +186,8 @@ func main() {
 		newInstance.Tags = &compute.Tags{
 			Items: []string{
 				"web-server",
-				"http-server", 
-				"https-server", 
+				"http-server",
+				"https-server",
 				"ssh",
 			},
 		}
